@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type PeakDetailsProps = {
   peak: {
@@ -26,24 +26,23 @@ export const PeakDetails = ({ peak }: PeakDetailsProps) => {
       .eq("id", peak.id)
       .select();
     if (error) console.error({ error });
-    if (!error) setIsEdit(false);
+    setIsEdit(false);
   };
+
+  useEffect(() => {
+    console.log({ isEdit });
+  }, [isEdit]);
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <button
         type="button"
         onClick={() => setIsEdit(!isEdit)}
-        className="mt-5 py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
+        className="mt-5 mb-4 py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
       >
         Edit
       </button>
       {isEdit ? (
-        <div className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-          <h3>{peak.name}</h3>
-          <p>{peak.elevation}</p>
-        </div>
-      ) : (
         <form
           className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
           onSubmit={editPeak}
@@ -68,6 +67,11 @@ export const PeakDetails = ({ peak }: PeakDetailsProps) => {
             Submit
           </button>
         </form>
+      ) : (
+        <div className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+          <h3>{peak.name}</h3>
+          <p>{peak.elevation}</p>
+        </div>
       )}
     </div>
   );
